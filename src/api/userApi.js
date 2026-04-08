@@ -1,10 +1,11 @@
-const API_URL = "http://localhost:5000/api/v3/users";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/v3/users`;
 
 /* ================= TOKEN HELPER ================= */
 
 const getToken = () => {
   return localStorage.getItem("token");
 };
+
 
 const authHeader = () => ({
   "Content-Type": "application/json",
