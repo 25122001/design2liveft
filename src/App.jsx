@@ -18,7 +18,6 @@ import {
 } from "./api/userApi";
 
 function App() {
-
   /* ================= AUTH STATE ================= */
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -97,8 +96,7 @@ function App() {
 
     const cleanedEmail = email.trim();
 
-    const emailRegex =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
 
     if (!emailRegex.test(cleanedEmail)) {
       return "Please enter a valid email address (example: name@gmail.com)";
@@ -160,11 +158,7 @@ function App() {
     try {
       setLoading(true);
 
-      const data = await searchUsers(
-        searchTerm,
-        currentPage,
-        itemsPerPage
-      );
+      const data = await searchUsers(searchTerm, currentPage, itemsPerPage);
 
       setUsers(data?.users || []);
       setTotalUsers(data?.totalUsers || 0);
@@ -307,23 +301,23 @@ function App() {
   /* ================= MODAL CONTROL ================= */
 
   const openModel = (item = null) => {
-  if (item) {
-    setEditingItem(item);        // ✅ SET EDIT ITEM
-    setFormData({ ...item });    // ✅ FILL FORM
-  } else {
-    setEditingItem(null);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      aadhar: "",
-      working: "",
-      portion: "",
-      status: "active",
-    });
-  }
-  setIsModalOpen(true);
-};
+    if (item) {
+      setEditingItem(item); // ✅ SET EDIT ITEM
+      setFormData({ ...item }); // ✅ FILL FORM
+    } else {
+      setEditingItem(null);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        aadhar: "",
+        working: "",
+        portion: "",
+        status: "active",
+      });
+    }
+    setIsModalOpen(true);
+  };
 
   const closeModel = () => {
     setIsModalOpen(false);
@@ -339,119 +333,115 @@ function App() {
   /* ================= UI ================= */
 
   return (
-  <div className="min-h-screen bg-gray-950">
-    
-    {/* HEADER */}
-    <header className="bg-gray-900 border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        
-        {/* LEFT */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Users size={24} className="text-white" />
-          <h1 className="text-xl sm:text-2xl text-white font-bold">
-            Tenant List
-          </h1>
+    <div className="min-h-screen bg-gray-950">
+      {/* HEADER */}
+      <header className="bg-gray-900 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          {/* LEFT */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Users size={24} className="text-white" />
+            <h1 className="text-xl sm:text-2xl text-white font-bold">
+              Tenant List
+            </h1>
+          </div>
+
+          {/* RIGHT BUTTONS */}
+          <div className="flex flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
+            <button
+              onClick={() => setShowSensitive(!showSensitive)}
+              className="bg-yellow-400 px-3 py-2 text-sm sm:text-base rounded w-full sm:w-auto"
+            >
+              {showSensitive ? "Hide" : "Show"}
+            </button>
+
+            <button
+              onClick={() => openModel()}
+              className="bg-green-500 px-3 py-2 text-sm sm:text-base rounded flex items-center justify-center gap-1 w-full sm:w-auto"
+            >
+              <Plus size={16} /> Add
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 px-3 py-2 text-sm sm:text-base rounded text-white w-full sm:w-auto"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* MAIN */}
+      <main className="p-4 sm:p-6">
+        {/* STATS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
+          <StatsCard
+            title="Total Users"
+            value={stats.total}
+            icon={<Users size={22} />}
+            color="bg-purple-500"
+          />
+
+          <StatsCard
+            title="Active Users"
+            value={stats.active}
+            icon={<Users size={22} />}
+            color="bg-yellow-500"
+          />
+
+          <StatsCard
+            title="Inactive Users"
+            value={stats.inactive}
+            icon={<Users size={22} />}
+            color="bg-orange-500"
+          />
         </div>
 
-        {/* RIGHT BUTTONS */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
-          
-          <button
-            onClick={() => setShowSensitive(!showSensitive)}
-            className="bg-yellow-400 px-3 py-2 text-sm sm:text-base rounded w-full sm:w-auto"
-          >
-            {showSensitive ? "Hide" : "Show"}
-          </button>
-
-          <button
-            onClick={() => openModel()}
-            className="bg-green-500 px-3 py-2 text-sm sm:text-base rounded flex items-center justify-center gap-1 w-full sm:w-auto"
-          >
-            <Plus size={16} /> Add
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 px-3 py-2 text-sm sm:text-base rounded text-white w-full sm:w-auto"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-    </header>
-
-    {/* MAIN */}
-    <main className="p-4 sm:p-6">
-
-      {/* STATS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
-        <StatsCard
-          title="Total Users"
-          value={stats.total}
-          icon={<Users size={22} />}
-          color="bg-purple-500"
-        />
-
-        <StatsCard
-          title="Active Users"
-          value={stats.active}
-          icon={<Users size={22} />}
-          color="bg-yellow-500"
-        />
-
-        <StatsCard
-          title="Inactive Users"
-          value={stats.inactive}
-          icon={<Users size={22} />}
-          color="bg-orange-500"
-        />
-      </div>
-
-      {/* SEARCH */}
-      <SearchBar
-        value={searchTerm}
-        onChange={(val) => {
-          setSearchTerm(val);
-          setCurrentPage(1); // ✅ reset page on search
-        }}
-        onClear={() => {
-          setSearchTerm("");
-          setCurrentPage(1);
-        }}
-        itemsPerPage={itemsPerPage}
-        onItemsPerPageChange={(value) => {
-          setItemsPerPage(value);
-          setCurrentPage(1);
-        }}
-        currentPage={currentPage}
-        totalUsers={totalUsers}
-      />
-
-      {/* TABLE */}
-      <div className="mt-4 overflow-x-auto">
-        <UserTable
-          users={displayedUsers}
-          onEdit={openModel}
-          onDelete={handleDelete}
+        {/* SEARCH */}
+        <SearchBar
+          value={searchTerm}
+          onChange={(val) => {
+            setSearchTerm(val);
+            setCurrentPage(1); // ✅ reset page on search
+          }}
+          onClear={() => {
+            setSearchTerm("");
+            setCurrentPage(1);
+          }}
+          itemsPerPage={itemsPerPage}
+          onItemsPerPageChange={(value) => {
+            setItemsPerPage(value);
+            setCurrentPage(1);
+          }}
           currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
+          totalUsers={totalUsers}
         />
-      </div>
 
-      {/* MODAL */}
-      <UserModel
-        isOpen={isModalOpen}
-        onClose={closeModel}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={handleSubmit}
-        loading={loading}
-        editingItem={editingItem}
-      />
-    </main>
-  </div>
-);
+        {/* TABLE */}
+        <div className="mt-4 overflow-x-auto">
+          <UserTable
+            users={displayedUsers}
+            onEdit={openModel}
+            onDelete={handleDelete}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+
+        {/* MODAL */}
+        <UserModel
+          isOpen={isModalOpen}
+          onClose={closeModel}
+          formData={formData}
+          setFormData={setFormData}
+          onSubmit={handleSubmit}
+          loading={loading}
+          editingItem={editingItem}
+        />
+      </main>
+    </div>
+  );
 }
 
 export default App;

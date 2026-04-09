@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-/* {
-  "email": "admin@gmail.com",
-  "password": "123456"
-}
- */
-
-
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 export default function Login({ onLogin }) {

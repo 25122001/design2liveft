@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { X, Check } from "lucide-react";
 
@@ -36,97 +35,86 @@ function UserModel({
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
       <div className="bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-screen overflow-y-auto border border-gray-800">
-
         {/* HEADER */}
         <div className="flex justify-between items-center p-6 border-b border-gray-800">
           <h2 className="text-2xl font-bold text-white">
             {editingItem ? (
               <>
                 Edit Tenant :{" "}
-                <span className="text-green-500">
-                  {editingItem.name}
-                </span>
+                <span className="text-green-500">{editingItem.name}</span>
               </>
             ) : (
               "Add New Tenant"
             )}
           </h2>
 
-          <button
-            className="text-gray-400 hover:text-white"
-            onClick={onClose}
-          >
+          <button className="text-gray-400 hover:text-white" onClick={onClose}>
             <X size={24} />
           </button>
         </div>
 
-       <div className="border-b border-gray-800 pb-6">
+        <div className="border-b border-gray-800 pb-6">
+          {/* Centered Tenant Object ID */}
+          <div className="flex justify-center mb-4">
+            <h2 className="text-xl font-medium text-gray-400">
+              Tenant Object ID :
+              <span className="ml-2 text-blue-500 font-mono bg-gray-900 px-3 py-1 rounded-md">
+                {editingItem?._id || "Not Available"}
+              </span>
+            </h2>
+          </div>
 
-  {/* Centered Tenant Object ID */}
-  <div className="flex justify-center mb-4">
-    <h2 className="text-xl font-medium text-gray-400">
-      Tenant Object ID :
-      <span className="ml-2 text-blue-500 font-mono bg-gray-900 px-3 py-1 rounded-md">
-        {editingItem?._id || "Not Available"}
-      </span>
-    </h2>
-  </div>
+          {/* Grey Separator Line */}
+          <div className="border-b border-gray-700"></div>
 
-  {/* Grey Separator Line */}
-  <div className="border-b border-gray-700"></div>
+          {/* Steps Section */}
+          <div className="flex items-center justify-center gap-8 mt-6">
+            <div className="flex items-center gap-2">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold transition ${
+                  step === 1
+                    ? "bg-green-500 text-black"
+                    : "bg-gray-800 text-gray-400"
+                }`}
+              >
+                1
+              </div>
+              <span
+                className={`text-sm font-medium ${
+                  step === 1 ? "text-white" : "text-gray-400"
+                }`}
+              >
+                Basic Details
+              </span>
+            </div>
 
-  {/* Steps Section */}
-  <div className="flex items-center justify-center gap-8 mt-6">
+            <div className="w-16 h-[1px] bg-gray-700"></div>
 
-    <div className="flex items-center gap-2">
-      <div
-        className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold transition ${
-          step === 1
-            ? "bg-green-500 text-black"
-            : "bg-gray-800 text-gray-400"
-        }`}
-      >
-        1
-      </div>
-      <span
-        className={`text-sm font-medium ${
-          step === 1 ? "text-white" : "text-gray-400"
-        }`}
-      >
-        Basic Details
-      </span>
-    </div>
-
-    <div className="w-16 h-[1px] bg-gray-700"></div>
-
-    <div className="flex items-center gap-2">
-      <div
-        className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold transition ${
-          step === 2
-            ? "bg-green-500 text-black"
-            : "bg-gray-800 text-gray-400"
-        }`}
-      >
-        2
-      </div>
-      <span
-        className={`text-sm font-medium ${
-          step === 2 ? "text-white" : "text-gray-400"
-        }`}
-      >
-        Additional Details
-      </span>
-    </div>
-
-  </div>
-</div>
+            <div className="flex items-center gap-2">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold transition ${
+                  step === 2
+                    ? "bg-green-500 text-black"
+                    : "bg-gray-800 text-gray-400"
+                }`}
+              >
+                2
+              </div>
+              <span
+                className={`text-sm font-medium ${
+                  step === 2 ? "text-white" : "text-gray-400"
+                }`}
+              >
+                Additional Details
+              </span>
+            </div>
+          </div>
+        </div>
         {/* FORM */}
         <form onSubmit={handleFormSubmit} className="p-6">
-
           {/* ================= STEP 1 ================= */}
           {step === 1 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
               {/* NAME */}
               <InputField
                 label="Name*"
@@ -211,9 +199,7 @@ function UserModel({
           {/* ================= STEP 2 ================= */}
           {step === 2 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-              
-<InputField
+              <InputField
                 label="working*"
                 value={formData.working}
                 onChange={(val) =>
@@ -221,9 +207,6 @@ function UserModel({
                 }
               />
 
-
-
- 
               <div className="md:col-span-2 flex justify-between mt-6">
                 <button
                   type="button"
@@ -242,8 +225,8 @@ function UserModel({
                   {loading
                     ? "Saving..."
                     : editingItem
-                    ? "Update Tenant"
-                    : "Add Tenant"}
+                      ? "Update Tenant"
+                      : "Add Tenant"}
                 </button>
               </div>
             </div>
@@ -255,18 +238,10 @@ function UserModel({
 }
 
 /* Reusable Input */
-function InputField({
-  label,
-  value,
-  onChange,
-  type = "text",
-  maxLength,
-}) {
+function InputField({ label, value, onChange, type = "text", maxLength }) {
   return (
     <div>
-      <label className="block text-gray-300 font-medium mb-2">
-        {label}
-      </label>
+      <label className="block text-gray-300 font-medium mb-2">{label}</label>
       <input
         type={type}
         value={value}
