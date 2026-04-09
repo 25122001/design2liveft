@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // 👈 add this
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👈 new
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [authError, setAuthError] = useState(false); // ✅ NEW
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,9 +23,35 @@ export default function Login({ onLogin }) {
       localStorage.setItem("token", res.data.token);
       onLogin();
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      // ❌ removed alert
+      setAuthError(true); // ✅ show error page
     }
   };
+
+  /* ================= ERROR PAGE ================= */
+
+  if (authError) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-gray-950 text-white text-center px-4">
+        <h1 className="text-3xl font-bold mb-4 text-red-500">
+          Access Denied 🚫
+        </h1>
+
+        <p className="text-gray-300 mb-6">
+          You are restricted to access this page.
+        </p>
+
+        <button
+          onClick={() => setAuthError(false)} // 🔁 back to login
+          className="bg-green-500 px-4 py-2 rounded font-semibold"
+        >
+          Back to Login
+        </button>
+      </div>
+    );
+  }
+
+  /* ================= LOGIN FORM ================= */
 
   return (
     <div className="h-screen flex items-center justify-center bg-gray-950">
