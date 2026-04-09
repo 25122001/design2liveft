@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // 👈 add this
 
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👈 new
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,8 +19,7 @@ export default function Login({ onLogin }) {
       });
 
       localStorage.setItem("token", res.data.token);
-
-      onLogin(); // ✅ tell App user is logged in
+      onLogin();
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }
@@ -43,16 +44,24 @@ export default function Login({ onLogin }) {
           required
         />
 
+        {/* 🔥 Password with Eye Toggle */}
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            className="p-2 rounded bg-gray-800 text-white w-full pr-10"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-
-        <input
-          type="password"
-          placeholder="Password"
-          className="p-2 rounded bg-gray-800 text-white"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400"
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
 
         <button className="bg-green-500 p-2 rounded font-semibold">
           Login

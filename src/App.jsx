@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Users, Plus } from "lucide-react";
 import Swal from "sweetalert2";
@@ -50,6 +51,16 @@ function App() {
 
   const [showSensitive, setShowSensitive] = useState(false);
 
+  /* ================= TOAST CONFIG ================= */
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+  });
+
   /* ================= AUTO TOKEN CHECK ================= */
 
   useEffect(() => {
@@ -59,9 +70,17 @@ function App() {
 
   /* ================= LOGOUT ================= */
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
+
+    // ✅ Logout success alert
+    await Swal.fire({
+      icon: "success",
+      title: "Logged out successfully",
+      timer: 1500,
+      showConfirmButton: false,
+    });
   };
 
   /* ================= MASK FUNCTIONS ================= */
@@ -95,7 +114,6 @@ function App() {
     if (!email || !email.trim()) return "Email is required";
 
     const cleanedEmail = email.trim();
-
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
 
     if (!emailRegex.test(cleanedEmail)) {
@@ -302,8 +320,8 @@ function App() {
 
   const openModel = (item = null) => {
     if (item) {
-      setEditingItem(item); // ✅ SET EDIT ITEM
-      setFormData({ ...item }); // ✅ FILL FORM
+      setEditingItem(item);
+      setFormData({ ...item });
     } else {
       setEditingItem(null);
       setFormData({
@@ -327,7 +345,19 @@ function App() {
   /* ================= AUTH GUARD ================= */
 
   if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />;
+    return (
+      <Login
+        onLogin={() => {
+          setIsAuthenticated(true);
+
+          // ✅ Login success toast
+          Toast.fire({
+            icon: "success",
+            title: "Login successful",
+          });
+        }}
+      />
+    );
   }
 
   /* ================= UI ================= */
@@ -337,7 +367,6 @@ function App() {
       {/* HEADER */}
       <header className="bg-gray-900 border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          {/* LEFT */}
           <div className="flex items-center gap-2 sm:gap-3">
             <Users size={24} className="text-white" />
             <h1 className="text-xl sm:text-2xl text-white font-bold">
@@ -345,7 +374,6 @@ function App() {
             </h1>
           </div>
 
-          {/* RIGHT BUTTONS */}
           <div className="flex flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
             <button
               onClick={() => setShowSensitive(!showSensitive)}
@@ -371,7 +399,7 @@ function App() {
         </div>
       </header>
 
-      {/* MAIN */}
+{/* MAIN */}
       <main className="p-4 sm:p-6">
         {/* STATS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
@@ -445,3 +473,6 @@ function App() {
 }
 
 export default App;
+
+
+
