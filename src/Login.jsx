@@ -9,10 +9,12 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const [authError, setAuthError] = useState(false); // ✅ NEW
+  const [authError, setAuthError] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ NEW
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // ✅ start loading
 
     try {
       const res = await axios.post(`${API_URL}/login`, {
@@ -23,10 +25,21 @@ export default function Login({ onLogin }) {
       localStorage.setItem("token", res.data.token);
       onLogin();
     } catch (err) {
-      // ❌ removed alert
-      setAuthError(true); // ✅ show error page
+      setAuthError(true);
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
   };
+
+  /* ================= LOADING SCREEN ================= */
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-950 text-white text-xl">
+        Loading...
+      </div>
+    );
+  }
 
   /* ================= ERROR PAGE ================= */
 
@@ -42,7 +55,7 @@ export default function Login({ onLogin }) {
         </p>
 
         <button
-          onClick={() => setAuthError(false)} // 🔁 back to login
+          onClick={() => setAuthError(false)}
           className="bg-green-500 px-4 py-2 rounded font-semibold"
         >
           Back to Login
@@ -91,8 +104,11 @@ export default function Login({ onLogin }) {
           </span>
         </div>
 
-        <button className="bg-green-500 p-2 rounded font-semibold">
-          Login
+        <button
+          className="bg-green-500 p-2 rounded font-semibold"
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Login"} {/* ✅ Button loading */}
         </button>
       </form>
     </div>
